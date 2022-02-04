@@ -5,11 +5,14 @@ import com.works.glycemic.models.User;
 import com.works.glycemic.repositories.RoleRepository;
 import com.works.glycemic.repositories.UserRepository;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +35,7 @@ public class UserService extends SimpleUrlLogoutSuccessHandler implements UserDe
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
     }
+
     // user login method
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -68,6 +72,25 @@ public class UserService extends SimpleUrlLogoutSuccessHandler implements UserDe
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         super.onLogoutSuccess(request, response, authentication);
     }
+
+
+    //user register method
+    public User register( User us ) throws AuthenticationException {
+
+        Optional<User> uOpt = userRepository.findByEmailEqualsIgnoreCase(us.getEmail());
+        if ( uOpt.isPresent() ) {
+            return null;
+        }
+        us.setPassword( encoder().encode( us.getPassword() ) );
+
+        return userRepository.save(us);
+    }
+
+    // password encoder
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 
 
 }
