@@ -16,7 +16,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-    // sql -> jpa query -> user control
+   // sql -> jpa query -> user control
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService((userService)).passwordEncoder(userService.encoder());
