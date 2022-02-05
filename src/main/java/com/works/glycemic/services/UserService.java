@@ -52,7 +52,7 @@ public class UserService extends SimpleUrlLogoutSuccessHandler implements UserDe
                     true,
                     getAuthorities( u.getRoles() )
             );
-
+            return userDetails;
         }
         throw new UsernameNotFoundException("User name not found");
     }
