@@ -92,5 +92,50 @@ public class UserService extends SimpleUrlLogoutSuccessHandler implements UserDe
     }
 
 
+    //user register service
+    public User userRegisterService( User user){
+
+        //user control
+        Optional<User> oUser = userRepository.findByEmailEqualsIgnoreCase(user.getEmail());
+        if( oUser.isPresent()){
+            return null;
+        }else {
+            //register action
+            Optional<Role> oRole = roleRepository.findById(2L);
+            if( oRole.isPresent()){
+                //register
+                List<Role> roles = new ArrayList<>();
+                Role r = oRole.get();
+                roles.add(r);
+                user.setRoles(roles);
+                // email send -> enabled false
+                return register(user);
+            }
+        }
+
+
+        return null;
+    }
+    //admin register service
+    public User adminRegisterService( User user){
+
+        //admin control
+        Optional<User> oUser = userRepository.findByEmailEqualsIgnoreCase(user.getEmail());
+        if( oUser.isPresent()){
+            return null;
+        }else {
+            //register action
+            Optional<Role> oRole = roleRepository.findById(1L);
+            if( oRole.isPresent()){
+                //register
+                user.setRoles(roleRepository.findAll());
+                // email send -> enabled false
+                return register(user);
+            }
+        }
+
+
+        return null;
+    }
 
 }
