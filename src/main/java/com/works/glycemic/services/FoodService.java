@@ -3,11 +3,11 @@ package com.works.glycemic.services;
 import com.works.glycemic.config.AuditAwareConfig;
 import com.works.glycemic.models.Food;
 import com.works.glycemic.repositories.FoodRepository;
+import com.works.glycemic.utils.REnum;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class FoodService {
@@ -46,38 +46,90 @@ public class FoodService {
 
     }
     // user food delete
-    public Food userFoodDelete(long gid){
-            Optional<String> oUserName = auditAwareConfig.getCurrentAuditor();
-            if (oUserName.isPresent()) {
-                Optional<Food> fd = foodRepository.findByGidIsAndCreatedByEqualsIgnoreCase(gid,oUserName.get());
-                    if (fd.isPresent()){
+    @Transactional
+    public Map<REnum, Object> foodDelete(long gid) {
+        Map<REnum, Object> hm = new LinkedHashMap<>();
+        hm.put(REnum.status, false);
+        Optional<String> oUserName = auditAwareConfig.getCurrentAuditor();
+        if ( oUserName.isPresent() ) {
+            try {
+                String userName = oUserName.get();
+                if ( auditAwareConfig.roles().contains("ROLE_admin") ) {
+                    // admin food delete
+                    foodRepository.deleteById(gid);
+                    hm.put(REnum.status, true);
+                    hm.put(REnum.message, "Silme işlemi başarılı");
+                }else {
+                    // user food delete
+                    Optional<Food> oFoods = foodRepository.findByCreatedByEqualsIgnoreCaseAndGidEquals(userName, gid);
+                    if ( oFoods.isPresent() ) {
+                        // user delete gid
                         foodRepository.deleteById(gid);
-                        return fd.get();
-                    }else{
-                        return null;
+                        hm.put(REnum.status, true);
+                        hm.put(REnum.message, "Silme işlemi başarılı");
+                    }else {
+                        hm.put(REnum.message, "Bu ürün size ait değil");
                     }
-            }else{
-                return null;
+                }
+            }catch (Exception ex) {
+                hm.put(REnum.message, "Silme işlemi sırasında bir hata oluştu veya id hatalı!");
             }
-
+        }else {
+            hm.put(REnum.message, "Bu işlem için yetkiniz yok!");
         }
-    // user food update
-    public Food userFoodUpdate(Food food){
+        hm.put(REnum.result, gid);
+        return hm;
+    }
+
+
+    //user update food
+    public Map<REnum, Object> userUpdateFood(Food food) {
+        Map<REnum, Object> hm = new LinkedHashMap<>();
+
+        hm.put(REnum.status, true);
+        hm.put(REnum.message, "Ürün başarıyla güncellendi");
+        hm.put(REnum.result, "id: " + food.getGid());
+
         Optional<String> oUserName = auditAwareConfig.getCurrentAuditor();
         if (oUserName.isPresent()) {
-            Optional<Food> fd = foodRepository.findByGidIsAndCreatedByEqualsIgnoreCase(food.getGid(),oUserName.get());
-            if (fd.isPresent()){
-                food.setCreatedBy(fd.get().getCreatedBy());
-                food.setCreatedDate(fd.get().getCreatedDate());
-                food.setEnabled(false);
-                return foodRepository.saveAndFlush(food);
-
-            }else{
-                return null;
+            String userName = oUserName.get();
+            try {
+                Food userFood = foodRepository.findById(food.getGid()).get();
+                //admin food update
+                if (auditAwareConfig.roles().contains("ROLE_admin")) {
+                    userFood.setCid(food.getCid());
+                    userFood.setName(food.getName());
+                    userFood.setGlycemicindex(food.getGlycemicindex());
+                    userFood.setImage(food.getImage());
+                    userFood.setSource(food.getSource());
+                    userFood.setEnabled(food.isEnabled());
+                    hm.put(REnum.result, foodRepository.save(userFood));
+                }
+                else {
+                    //user food update
+                    Optional<Food> oFood = foodRepository.findByCreatedByEqualsIgnoreCaseAndGidEquals(userName,food.getGid());
+                    if (oFood.isPresent()) {
+                        userFood.setCid(food.getCid());
+                        userFood.setName(food.getName());
+                        userFood.setGlycemicindex(food.getGlycemicindex());
+                        userFood.setImage(food.getImage());
+                        userFood.setSource(food.getSource());
+                        hm.put(REnum.result, foodRepository.save(userFood));
+                    }
+                    else {
+                        hm.put(REnum.status, false);
+                        hm.put(REnum.message, "Güncellemek istediğiniz ürün size ait değil!");
+                    }
+                }
             }
-        }else{
-            return null;
+            catch (Exception ex) {
+                hm.put(REnum.status, false);
+                hm.put(REnum.message, "Update işlemi sırasında bir hata oluştu!");
+            }
+        } else {
+            hm.put(REnum.status, false);
+            hm.put(REnum.message, "Bu işleme yetkiniz yok!");
         }
-
+        return hm;
     }
 }

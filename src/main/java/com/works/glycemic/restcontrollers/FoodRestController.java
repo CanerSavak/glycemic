@@ -57,36 +57,19 @@ public class FoodRestController {
         return hm;
     }
 
-    // user food delete
-    @DeleteMapping("/userFoodDelete")
-    public Map<REnum,Object> userFoodDelete(@RequestParam(name = "gid") long gid) {
-        Map<REnum, Object> hm = new LinkedHashMap<>();
-        Food food = foodService.userFoodDelete(gid);
-        if(food == null) {
-            hm.put(REnum.status, false);
-            hm.put(REnum.message, "Bu ürünü silme yetkiniz bulunmamaktadır!");
-        }else{
-            hm.put(REnum.status, true);
-            hm.put(REnum.message, "Ürün başarıyla silindi");
-        }
-       return hm;
-        }
-
-    //user food update
-    @PutMapping("/userFoodUpdate")
-    public Map<REnum,Object> userFoodUpdate(@RequestBody Food food) {
-        Map<REnum, Object> hm = new LinkedHashMap<>();
-        Food uFood = foodService.userFoodUpdate(food);
-        if(uFood == null) {
-            hm.put(REnum.status, false);
-            hm.put(REnum.message, "Güncelleme işlemi başarısız!");
-        }else{
-            hm.put(REnum.status, true);
-            hm.put(REnum.message, "Güncelleme işlemi tamamlandı");
-            hm.put(REnum.result, uFood);
-        }
-        return hm;
+    // list delete
+    @DeleteMapping("/foodDelete")
+    public Map<REnum, Object> foodDelete(@RequestParam long gid) {
+        return foodService.foodDelete(gid);
     }
+
+
+    //  food update
+    @PutMapping("foodUpdate")
+    public Map<REnum,Object> foodUpdate(@RequestBody Food food){
+        return foodService.userUpdateFood(food);
+    }
+
 
 
 }

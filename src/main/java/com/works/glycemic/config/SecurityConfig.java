@@ -29,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/food/save").hasRole("user")
+                .antMatchers("/food/save").hasAnyRole("user","admin")
                 .antMatchers("/food/userFoodList").hasAnyRole("user","admin")
                 .antMatchers("/food/userFoodDelete").hasAnyRole("user","admin")
                 .antMatchers("/food/list").hasAnyRole("global","user","admin")
