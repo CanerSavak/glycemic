@@ -3,7 +3,6 @@ package com.works.glycemic.services;
 import com.works.glycemic.config.AuditAwareConfig;
 import com.works.glycemic.models.Food;
 import com.works.glycemic.repositories.FoodRepository;
-import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,6 +42,41 @@ public class FoodService {
 
         }else{
             return new ArrayList<Food>();
+        }
+
+    }
+    // user food delete
+    public Food userFoodDelete(long gid){
+            Optional<String> oUserName = auditAwareConfig.getCurrentAuditor();
+            if (oUserName.isPresent()) {
+                Optional<Food> fd = foodRepository.findByGidIsAndCreatedByEqualsIgnoreCase(gid,oUserName.get());
+                    if (fd.isPresent()){
+                        foodRepository.deleteById(gid);
+                        return fd.get();
+                    }else{
+                        return null;
+                    }
+            }else{
+                return null;
+            }
+
+        }
+    // user food update
+    public Food userFoodUpdate(Food food){
+        Optional<String> oUserName = auditAwareConfig.getCurrentAuditor();
+        if (oUserName.isPresent()) {
+            Optional<Food> fd = foodRepository.findByGidIsAndCreatedByEqualsIgnoreCase(food.getGid(),oUserName.get());
+            if (fd.isPresent()){
+                food.setCreatedBy(fd.get().getCreatedBy());
+                food.setCreatedDate(fd.get().getCreatedDate());
+                food.setEnabled(false);
+                return foodRepository.saveAndFlush(food);
+
+            }else{
+                return null;
+            }
+        }else{
+            return null;
         }
 
     }

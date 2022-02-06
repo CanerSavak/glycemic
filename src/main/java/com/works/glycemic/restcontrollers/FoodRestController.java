@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+
 @RestController
 @RequestMapping("/food")
 public class FoodRestController {
@@ -53,6 +54,37 @@ public class FoodRestController {
         hm.put(REnum.status, true );
         hm.put(REnum.message, "Ürün listesi" );
         hm.put(REnum.result, foodService.userFoodList());
+        return hm;
+    }
+
+    // user food delete
+    @DeleteMapping("/userFoodDelete")
+    public Map<REnum,Object> userFoodDelete(@RequestParam(name = "gid") long gid) {
+        Map<REnum, Object> hm = new LinkedHashMap<>();
+        Food food = foodService.userFoodDelete(gid);
+        if(food == null) {
+            hm.put(REnum.status, false);
+            hm.put(REnum.message, "Bu ürünü silme yetkiniz bulunmamaktadır!");
+        }else{
+            hm.put(REnum.status, true);
+            hm.put(REnum.message, "Ürün başarıyla silindi");
+        }
+       return hm;
+        }
+
+    //user food update
+    @PutMapping("/userFoodUpdate")
+    public Map<REnum,Object> userFoodUpdate(@RequestBody Food food) {
+        Map<REnum, Object> hm = new LinkedHashMap<>();
+        Food uFood = foodService.userFoodUpdate(food);
+        if(uFood == null) {
+            hm.put(REnum.status, false);
+            hm.put(REnum.message, "Güncelleme işlemi başarısız!");
+        }else{
+            hm.put(REnum.status, true);
+            hm.put(REnum.message, "Güncelleme işlemi tamamlandı");
+            hm.put(REnum.result, uFood);
+        }
         return hm;
     }
 
