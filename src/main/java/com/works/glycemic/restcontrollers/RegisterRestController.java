@@ -3,14 +3,12 @@ package com.works.glycemic.restcontrollers;
 import com.works.glycemic.models.User;
 import com.works.glycemic.services.UserService;
 import com.works.glycemic.utils.REnum;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@CrossOrigin(origins = "*",allowedHeaders = "*")
 @RestController
 @RequestMapping("/register")
 public class RegisterRestController {
