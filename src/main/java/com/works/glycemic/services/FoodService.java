@@ -4,6 +4,7 @@ import com.works.glycemic.config.AuditAwareConfig;
 import com.works.glycemic.models.Food;
 import com.works.glycemic.repositories.FoodRepository;
 import com.works.glycemic.utils.REnum;
+import org.apache.commons.text.WordUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,25 @@ public class FoodService {
         if(oFood.isPresent()){
             return null;
         }else{
+            String newName = food.getName().trim().replaceAll("\\s+"," ");
+            String newUrl = food.getName().trim().replaceAll("\\s+","-");
+            newUrl =    newUrl.replace("ö","o");
+            newUrl =    newUrl.replace("ü","u");
+            newUrl =    newUrl.replace("ğ","g");
+            newUrl =    newUrl.replace("ş","s");
+            newUrl =    newUrl.replace("ı","i");
+            newUrl =    newUrl.replace("I","i");
+            newUrl =    newUrl.replace("ç","c");
+            newUrl =    newUrl.replace("Ö","o");
+            newUrl =    newUrl.replace("Ü","u");
+            newUrl =    newUrl.replace("Ğ","g");
+            newUrl =    newUrl.replace("Ş","s");
+            newUrl =    newUrl.replace("İ","ı");
+            newUrl =    newUrl.replace("Ç","c");
+            newUrl =    newUrl.toLowerCase();
+            food.setUrl(newUrl);
+            String newName2 = WordUtils.capitalize(newName);
+            food.setName(newName2);
             food.setEnabled(false);
             return foodRepository.save(food);
         }
@@ -95,14 +115,32 @@ public class FoodService {
             String userName = oUserName.get();
             try {
                 Food userFood = foodRepository.findById(food.getGid()).get();
+                String newName = food.getName().trim().replaceAll("\\s+"," ");
+                String newUrl = food.getName().trim().replaceAll("\\s+","-");
+                newUrl =    newUrl.replace("ö","o");
+                newUrl =    newUrl.replace("ü","u");
+                newUrl =    newUrl.replace("ğ","g");
+                newUrl =    newUrl.replace("ş","s");
+                newUrl =    newUrl.replace("ı","i");
+                newUrl =    newUrl.replace("I","i");
+                newUrl =    newUrl.replace("ç","c");
+                newUrl =    newUrl.replace("Ö","o");
+                newUrl =    newUrl.replace("Ü","u");
+                newUrl =    newUrl.replace("Ğ","g");
+                newUrl =    newUrl.replace("Ş","s");
+                newUrl =    newUrl.replace("İ","ı");
+                newUrl =    newUrl.replace("Ç","c");
+                newUrl =    newUrl.toLowerCase();
+                String newName2 = WordUtils.capitalize(newName);
                 //admin food update
                 if (auditAwareConfig.roles().contains("ROLE_admin")) {
                     userFood.setCid(food.getCid());
-                    userFood.setName(food.getName());
+                    userFood.setName(newName2);
                     userFood.setGlycemicindex(food.getGlycemicindex());
                     userFood.setImage(food.getImage());
                     userFood.setSource(food.getSource());
                     userFood.setEnabled(food.isEnabled());
+                    userFood.setUrl(newUrl);
                     hm.put(REnum.result, foodRepository.save(userFood));
                 }
                 else {
@@ -110,10 +148,11 @@ public class FoodService {
                     Optional<Food> oFood = foodRepository.findByCreatedByEqualsIgnoreCaseAndGidEquals(userName,food.getGid());
                     if (oFood.isPresent()) {
                         userFood.setCid(food.getCid());
-                        userFood.setName(food.getName());
+                        userFood.setName(newName2);
                         userFood.setGlycemicindex(food.getGlycemicindex());
                         userFood.setImage(food.getImage());
                         userFood.setSource(food.getSource());
+                        userFood.setUrl(newUrl);
                         hm.put(REnum.result, foodRepository.save(userFood));
                     }
                     else {

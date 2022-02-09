@@ -16,4 +16,5 @@ export interface ResultFoods {
     image?:         string;
     source?:        string;
     enabled?:       boolean;
+    url?:           string;
 }

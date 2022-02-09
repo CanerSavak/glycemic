@@ -19,8 +19,9 @@ public class Food extends BaseModel{
     @Column(unique = true)
     private String  name;
     private Integer glycemicindex;
-    @Column(length = 10000)
+    @Column(length = 50000)
     private String image;
     private String source;
     private boolean enabled;
+    private String url;
 }
