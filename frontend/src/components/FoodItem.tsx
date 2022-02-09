@@ -27,7 +27,7 @@ export default function ProItem( props:foodModel) {
     }
     
     const fncGotoDetail = (url:string) =>{
-        navigate("/detail/"+url)
+        navigate("detail/"+url)
     }
     
   return <> 
@@ -47,7 +47,12 @@ export default function ProItem( props:foodModel) {
         <Table.Body >
           <Table.Row >
             <Table.Cell >
+              {props.item.image !== "" && 
                 <Image src={props.item.image} size='small' centered />
+              }
+              {props.item.image === "" && 
+               <Image src="./logo192.png" size='small' centered />          
+              }
             </Table.Cell>        
             <Table.Cell singleLine  verticalAlign='middle' >
               <Label size='huge' circular color={glycemicColor(props.item.glycemicindex!)}>

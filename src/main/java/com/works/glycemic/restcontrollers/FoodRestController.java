@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*",allowedHeaders = "*")
 @RestController
@@ -36,6 +37,22 @@ public class FoodRestController {
         return hm;
 
     }
+    @GetMapping("detail/{url}")
+    public Map<REnum,Object> singleFoodUrl(@PathVariable String url){
+        Optional<Food> oFoods = foodService.singleFood(url);
+        Map<REnum,Object> hm = new LinkedHashMap<>();
+        if (oFoods.isPresent()){
+            hm.put(REnum.status, false );
+            hm.put(REnum.message, "Ürün Detayı Alındı" );
+            hm.put(REnum.result, oFoods.get());
+        }else{
+            hm.put(REnum.status, false );
+            hm.put(REnum.message, "Ürü Detay bulunamadı" );
+            hm.put(REnum.result, null);
+        }
+        return hm;
+    }
+
 
     //food list
     @GetMapping("/list")

@@ -19,35 +19,48 @@ public class FoodService {
         this.auditAwareConfig = auditAwareConfig;
     }
 
+    public static String nameControl(String name){
+        String newName = name.trim().replaceAll("\\s+"," ");
+        newName = WordUtils.capitalize(newName);
+        return newName;
+    }
+    public static String urlControl(String url){
+        String newUrl = url.trim().replaceAll("\\s+","-");
+        newUrl =    newUrl.replace("ö","o");
+        newUrl =    newUrl.replace("ü","u");
+        newUrl =    newUrl.replace("ğ","g");
+        newUrl =    newUrl.replace("ş","s");
+        newUrl =    newUrl.replace("ı","i");
+        newUrl =    newUrl.replace("I","i");
+        newUrl =    newUrl.replace("ç","c");
+        newUrl =    newUrl.replace("Ö","o");
+        newUrl =    newUrl.replace("Ü","u");
+        newUrl =    newUrl.replace("Ğ","g");
+        newUrl =    newUrl.replace("Ş","s");
+        newUrl =    newUrl.replace("İ","ı");
+        newUrl =    newUrl.replace("Ç","c");
+        newUrl =    newUrl.toLowerCase();
+
+        return newUrl;
+    }
+
     //food save
     public Food foodSave(Food food){
         Optional<Food> oFood = foodRepository.findByNameEqualsIgnoreCase(food.getName());
         if(oFood.isPresent()){
             return null;
         }else{
-            String newName = food.getName().trim().replaceAll("\\s+"," ");
-            String newUrl = food.getName().trim().replaceAll("\\s+","-");
-            newUrl =    newUrl.replace("ö","o");
-            newUrl =    newUrl.replace("ü","u");
-            newUrl =    newUrl.replace("ğ","g");
-            newUrl =    newUrl.replace("ş","s");
-            newUrl =    newUrl.replace("ı","i");
-            newUrl =    newUrl.replace("I","i");
-            newUrl =    newUrl.replace("ç","c");
-            newUrl =    newUrl.replace("Ö","o");
-            newUrl =    newUrl.replace("Ü","u");
-            newUrl =    newUrl.replace("Ğ","g");
-            newUrl =    newUrl.replace("Ş","s");
-            newUrl =    newUrl.replace("İ","ı");
-            newUrl =    newUrl.replace("Ç","c");
-            newUrl =    newUrl.toLowerCase();
-            food.setUrl(newUrl);
-            String newName2 = WordUtils.capitalize(newName);
-            food.setName(newName2);
+            food.setUrl(urlControl(food.getName()));
+            food.setName(nameControl(food.getName()));
             food.setEnabled(false);
             return foodRepository.save(food);
         }
     }
+
+    public Optional<Food> singleFood(String url) {
+        return foodRepository.findByUrlEqualsIgnoreCaseAllIgnoreCase(url);
+    }
+
 
     //food list
     public List<Food> foodList(){
@@ -115,32 +128,15 @@ public class FoodService {
             String userName = oUserName.get();
             try {
                 Food userFood = foodRepository.findById(food.getGid()).get();
-                String newName = food.getName().trim().replaceAll("\\s+"," ");
-                String newUrl = food.getName().trim().replaceAll("\\s+","-");
-                newUrl =    newUrl.replace("ö","o");
-                newUrl =    newUrl.replace("ü","u");
-                newUrl =    newUrl.replace("ğ","g");
-                newUrl =    newUrl.replace("ş","s");
-                newUrl =    newUrl.replace("ı","i");
-                newUrl =    newUrl.replace("I","i");
-                newUrl =    newUrl.replace("ç","c");
-                newUrl =    newUrl.replace("Ö","o");
-                newUrl =    newUrl.replace("Ü","u");
-                newUrl =    newUrl.replace("Ğ","g");
-                newUrl =    newUrl.replace("Ş","s");
-                newUrl =    newUrl.replace("İ","ı");
-                newUrl =    newUrl.replace("Ç","c");
-                newUrl =    newUrl.toLowerCase();
-                String newName2 = WordUtils.capitalize(newName);
                 //admin food update
                 if (auditAwareConfig.roles().contains("ROLE_admin")) {
                     userFood.setCid(food.getCid());
-                    userFood.setName(newName2);
+                    userFood.setName(nameControl(food.getName()));
                     userFood.setGlycemicindex(food.getGlycemicindex());
                     userFood.setImage(food.getImage());
                     userFood.setSource(food.getSource());
                     userFood.setEnabled(food.isEnabled());
-                    userFood.setUrl(newUrl);
+                    userFood.setUrl(urlControl(food.getName()));
                     hm.put(REnum.result, foodRepository.save(userFood));
                 }
                 else {
@@ -148,11 +144,11 @@ public class FoodService {
                     Optional<Food> oFood = foodRepository.findByCreatedByEqualsIgnoreCaseAndGidEquals(userName,food.getGid());
                     if (oFood.isPresent()) {
                         userFood.setCid(food.getCid());
-                        userFood.setName(newName2);
+                        userFood.setName(nameControl(food.getName()));
                         userFood.setGlycemicindex(food.getGlycemicindex());
                         userFood.setImage(food.getImage());
                         userFood.setSource(food.getSource());
-                        userFood.setUrl(newUrl);
+                        userFood.setUrl(urlControl(food.getName()));
                         hm.put(REnum.result, foodRepository.save(userFood));
                     }
                     else {
