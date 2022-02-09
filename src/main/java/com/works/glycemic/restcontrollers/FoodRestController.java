@@ -3,6 +3,7 @@ package com.works.glycemic.restcontrollers;
 import com.works.glycemic.models.Food;
 import com.works.glycemic.services.FoodService;
 import com.works.glycemic.utils.REnum;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
@@ -55,6 +56,7 @@ public class FoodRestController {
 
 
     //food list
+    @Cacheable("food_list")
     @GetMapping("/list")
     public Map<REnum,Object> list() {
         Map<REnum, Object> hm = new LinkedHashMap<>();

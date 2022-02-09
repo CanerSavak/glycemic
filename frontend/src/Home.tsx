@@ -17,6 +17,10 @@ export default function Home() {
 
 
     const [foodsArr, setFoodsArr] = useState<ResultFoods[]>([]);
+    const [searchArr, setSearchArr] = useState<ResultFoods[]>([]);
+
+    //pages
+    const [pageCount, setPageCount] = useState(5);
 
     useEffect(() => {
     
@@ -24,6 +28,7 @@ export default function Home() {
      allFoodsList().then( res =>{
          const dt:IFoods = res.data;
          setFoodsArr(dt.result!)
+         setSearchArr(dt.result!)
         toast.dismiss();
      }).catch ( err => {  
         toast.dismiss(); 
@@ -32,6 +37,16 @@ export default function Home() {
 
     }, []);
     
+    const search = (q:string) => {
+      if( q === ""){
+        setFoodsArr(searchArr)
+      }
+      else{
+        q = q.toLowerCase()
+        const newArr =searchArr.filter( item => item.name?.toLowerCase().includes(q) )
+        setFoodsArr(newArr)
+      }
+    }
    
 
 
@@ -41,7 +56,7 @@ export default function Home() {
       <ToastContainer/>
       <NavMenu/>  
       <Header className="ui center aligned header" as='h4' inverted color='green' size='huge' >Food List </Header>                 
-           <Input fluid style={{ marginBottom: 10, }}
+           <Input onChange={(e) => search(e.target.value)} fluid style={{ marginBottom: 10, }}
             action={
             <Dropdown button basic floating options={options} defaultValue='page' />
              }

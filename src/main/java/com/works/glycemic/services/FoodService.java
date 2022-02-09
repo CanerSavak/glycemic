@@ -5,6 +5,7 @@ import com.works.glycemic.models.Food;
 import com.works.glycemic.repositories.FoodRepository;
 import com.works.glycemic.utils.REnum;
 import org.apache.commons.text.WordUtils;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,9 +15,11 @@ import java.util.*;
 public class FoodService {
     final FoodRepository foodRepository;
     final AuditAwareConfig auditAwareConfig;
-    public FoodService(FoodRepository foodRepository, AuditAwareConfig auditAwareConfig) {
+    final CacheManager cacheManager;
+    public FoodService(FoodRepository foodRepository, AuditAwareConfig auditAwareConfig, CacheManager cacheManager) {
         this.foodRepository = foodRepository;
         this.auditAwareConfig = auditAwareConfig;
+        this.cacheManager = cacheManager;
     }
 
     public static String nameControl(String name){
@@ -137,7 +140,10 @@ public class FoodService {
                     userFood.setSource(food.getSource());
                     userFood.setEnabled(food.isEnabled());
                     userFood.setUrl(urlControl(food.getName()));
-                    hm.put(REnum.result, foodRepository.save(userFood));
+                    if( food.isEnabled()){
+                        cacheManager.getCache("food_list").clear();
+                    }
+                    hm.put(REnum.result, foodRepository.saveAndFlush(userFood));
                 }
                 else {
                     //user food update
@@ -149,7 +155,8 @@ public class FoodService {
                         userFood.setImage(food.getImage());
                         userFood.setSource(food.getSource());
                         userFood.setUrl(urlControl(food.getName()));
-                        hm.put(REnum.result, foodRepository.save(userFood));
+                        userFood.setEnabled(false);
+                        hm.put(REnum.result, foodRepository.saveAndFlush(userFood));
                     }
                     else {
                         hm.put(REnum.status, false);
