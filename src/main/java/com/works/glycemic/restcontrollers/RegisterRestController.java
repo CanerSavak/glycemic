@@ -53,4 +53,20 @@ public class RegisterRestController {
 
         return hm;
     }
+
+    @PostMapping("login")
+    public Map<REnum, Object> login(@RequestParam String email){
+        Map<REnum, Object> hm = new LinkedHashMap<>();
+        User u = userService.login(email);
+        if( u == null){
+            hm.put(REnum.status, false);
+            hm.put(REnum.message, "Böyle Bir Kullanıcı Yok");
+            hm.put(REnum.result, u);
+        }else{
+            hm.put(REnum.status, true);
+            hm.put(REnum.message, "Giriş Bilgileri");
+            hm.put(REnum.result, u);
+        }
+        return hm;
+    }
 }

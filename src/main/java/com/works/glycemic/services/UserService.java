@@ -138,4 +138,15 @@ public class UserService extends SimpleUrlLogoutSuccessHandler implements UserDe
         return null;
     }
 
+    //login with security
+    public User login( String email){
+        Optional<User> oUser = userRepository.findByEmailEqualsIgnoreCase(email);
+        if(oUser.isPresent()){
+            User u = oUser.get();
+            //u.setPassword(null);
+            return u;
+        }
+        return null;
+    }
+
 }

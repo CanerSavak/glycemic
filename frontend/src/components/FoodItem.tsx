@@ -32,7 +32,7 @@ export default function ProItem( props:foodModel) {
     
   return <> 
    
-      <Table padded textAlign='center' mobile={16} tablet={8} computer={4} >
+      <Table padded textAlign='center' mobile={16} tablet={8} computer={4} sort="asc" >
         <Table.Header >
           <Table.Row textAlign='center'>
             <Table.HeaderCell textAlign='left'>{props.item.name}</Table.HeaderCell>        
@@ -51,7 +51,7 @@ export default function ProItem( props:foodModel) {
                 <Image src={props.item.image} size='small' centered />
               }
               {props.item.image === "" && 
-               <Image src="./logo192.png" size='small' centered />          
+               <Image src="./foods.png" size='small' centered />          
               }
             </Table.Cell>        
             <Table.Cell singleLine  verticalAlign='middle' >
