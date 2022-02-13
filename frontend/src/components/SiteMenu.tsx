@@ -11,10 +11,7 @@ import { control, encryptData } from '../Util';
 
 
 export default function NavMenu() {
-  const [passTrue, setpassTrue] = useState("")
   
-  
-
   // modal delete state
   const [modalRegisterStatus, setModalRegisterStatus] = useState(false);
   const [modalLoginStatus, setModalLoginStatus] = useState(false);
@@ -46,6 +43,13 @@ export default function NavMenu() {
          navigate("/foodsList")
        }
      }
+     if ( name === "Bekleyenler" ) {
+      if ( control() === null ) {
+        setModalLoginStatus(true);
+      }else {
+        navigate("/waitFoodsList")
+      }
+    }
  
    }
 
@@ -60,6 +64,9 @@ export default function NavMenu() {
     }
     if ( loc.pathname === "/foodsList" ) {
       setActiveItem("Eklediklerim")
+    }
+    if ( loc.pathname === "/waitFoodsList" ) {
+      setActiveItem("Bekleyenler")
     }
   }
 
@@ -125,12 +132,18 @@ export default function NavMenu() {
 }
 
   // login status
+  const [isAdmin, setIsAdmin] = useState(false)
   const [loginStatus, setLoginStatus] = useState(false)
   useEffect(() => {
     urlActive()
     const usr = control()
     if (usr !== null) {
       setUser(usr)
+      usr.roles!.forEach(item => {
+        if ( item.name === "ROLE_admin" ) {
+          setIsAdmin(true)
+        }
+      });
     }
   }, [loginStatus])
 
@@ -149,11 +162,10 @@ export default function NavMenu() {
       const usr: IUser = res.data
       if ( usr.status! ) {
         const userResult = usr.result!
-
-        setpassTrue(userPass)  
-
         const key = process.env.REACT_APP_SALT
-        const cryptString = encryptData(userResult, key!)        
+        const cryptString = encryptData(userResult, key!) 
+        const userAuthString = encryptData(res.config.headers, key!)
+        localStorage.setItem("auth",userAuthString)       
         localStorage.setItem( "user", cryptString )
         setLoginStatus( usr.status! )
         setModalLoginStatus(false)
@@ -177,7 +189,9 @@ export default function NavMenu() {
       setIsLogOut(false)
       setUser(null)
       setLoginStatus(false)
+      setIsAdmin(false)
       toast.dismiss();
+      window.location.href = "/"
   }).catch(err => {
     toast.dismiss();
     toast.error( "Çıkış işlemi sırasında bir hata oluştu!" )
@@ -214,6 +228,13 @@ export default function NavMenu() {
             active={activeItem === 'Eklediklerim'}
             onClick={ (e, data) => handleItemClick(data.name!) }
             />
+             { isAdmin === true && 
+              <Menu.Item
+              name='Bekleyenler'
+              active={activeItem === 'Bekleyenler'}
+              onClick={ (e, data) => handleItemClick(data.name!) }
+              />
+            }
             <Menu.Menu position='right'>
 
             { !user && 

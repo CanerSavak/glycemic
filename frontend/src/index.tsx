@@ -8,6 +8,9 @@ import 'react-toastify/dist/ReactToastify.css';
 //import pages
 import Home from './Home'
 import FoodsAdd from './FoodsAdd';
+import Details from './Details';
+import AdminWaitFoodList from './AdminWaitFoodList';
+import FoodsList from './FoodsList';
 
 //Router
 const router =
@@ -15,6 +18,9 @@ const router =
   <Routes>
     <Route path='/' element={<Home/>}/>
     <Route path='/foodsAdd' element={<FoodsAdd/>}/>  
+    <Route path='/details/:url' element={ <Details/> } />
+    <Route path='/foodsList' element={ <FoodsList/> } />
+    <Route path='/waitFoodsList' element={ <AdminWaitFoodList/> } />
   </Routes>
 </Router>
 

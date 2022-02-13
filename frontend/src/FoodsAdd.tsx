@@ -1,17 +1,19 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify'
 import { Form, Header, Icon, InputOnChangeData, Segment, Image, Button } from 'semantic-ui-react'
 import SiteMenu from './components/SiteMenu'
 import { categories } from './Datas';
-import { IFoods } from './models/IFood';
+import { IFoods, ISingleFood } from './models/IFood';
 import {  UserResult } from './models/IUser';
 import { foodAdd } from './Services';
-import { decryptData } from './Util';
+import { authControl, decryptData } from './Util';
 
 
 export default function FoodsAdd() {
 
-  
+  //navigate
+  const navigate = useNavigate()
 
   // form item states
   const [name, setName] = useState("")
@@ -20,9 +22,7 @@ export default function FoodsAdd() {
   const [cid, setCid] = useState("")
   const [base64Image, setBase64Image] = useState("")
 
-  //authentication
-  const [userMail, setUserMail] = useState("");
-  const [userPass, setUserPass] = useState("");
+ 
 
   const fncSend = () => {
       console.log('fncSend Call')
@@ -73,16 +73,9 @@ export default function FoodsAdd() {
       toast.warning('Lütfen bir resim yükleyiniz!');
     }else {
       toast.loading("Yükleniyor.")
-      const chipperText = localStorage.getItem("user")
-      const key = process.env.REACT_APP_SALT
-      const cryptString:UserResult = decryptData(chipperText!,key!)
-      const passs:string =decryptData(cryptString.password!,key!)
-      setUserMail(cryptString.email!)      
-      setUserPass(cryptString.password!)     
-      
-      foodAdd( userMail, userPass, parseInt(cid), name, parseInt(glycemicindex),  base64Image, source)
+      foodAdd( parseInt(cid), name, parseInt(glycemicindex),  base64Image, source)
       .then(res => { 
-        const food:IFoods = res.data
+        const food:ISingleFood = res.data
         toast.dismiss(); 
         if ( food.status ) {
           // ekleme başarılı
@@ -97,11 +90,14 @@ export default function FoodsAdd() {
     }    
   }
 
-
-
-
-
-
+  useEffect(() => {
+    if(authControl() ===null){
+        navigate("/")
+        localStorage.removeItem("user")
+        localStorage.removeItem("auth")
+    }  
+  }, [])
+  
 
 
   return (

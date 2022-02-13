@@ -15,7 +15,7 @@ export const decryptData = (ciphertext:string, salt:string) => {
   }
 }
 
-
+//user object control
 export const control = () => {
 
     const localUser = localStorage.getItem("user")
@@ -42,4 +42,22 @@ export const control = () => {
         return null;
     }
 
+}
+
+// auth control
+export const authControl = () => {
+  const stLocal = localStorage.getItem("auth")
+  if(stLocal){
+    try {
+      const key = process.env.REACT_APP_SALT
+      const decyrpte =decryptData(stLocal,key!)
+      if(decyrpte !== null){
+      return decyrpte
+      }
+    } catch (error) {
+      return null
+    }
+  }else{
+    return null
+  }
 }

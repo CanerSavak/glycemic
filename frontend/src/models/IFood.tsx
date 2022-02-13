@@ -3,6 +3,11 @@ export interface IFoods {
     message?: string;
     result?:  ResultFoods[];
 }
+export interface ISingleFood {
+    status?:  boolean;
+    message?: string;
+    result?:  ResultFoods;
+}
 
 export interface ResultFoods {
     createdDate?:   number;

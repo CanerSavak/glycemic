@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Header, Rating, Table, Image, Item, Grid, Label, SemanticCOLORS, Button, Icon } from 'semantic-ui-react';
+import {  Table, Image, Label, SemanticCOLORS, Button, Icon } from 'semantic-ui-react';
 import { ResultFoods } from '../models/IFood';
 
 
 interface foodModel {
-    item: ResultFoods
+    item: ResultFoods    
 }
 
 export default function ProItem( props:foodModel) {
@@ -26,8 +25,8 @@ export default function ProItem( props:foodModel) {
       return color;
     }
     
-    const fncGotoDetail = (url:string) =>{
-        navigate("detail/"+url)
+    const fncGotoDetail = (url:string) =>{       
+        window.open("/details/"+url,"_blank")
     }
     
   return <> 

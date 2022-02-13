@@ -17,7 +17,7 @@ export default function Home()  {
     //pages
     const [pageCount, setPageCount] = useState(0);
     const [postsperpage, setPostsPerPage] = useState(10)
-    const [currentPage, setCurrentPage] = useState(1);    
+    const [currentPage, setCurrentPage] = useState<number>(1);    
 
     //select categories
     const [selectCategories, setSelectCategories] = useState(0);
@@ -57,8 +57,8 @@ export default function Home()  {
     
     //search
     const search = (q:string) => {
-      setWordSearch(q)
-      
+      setCurrentPage(1)
+      setWordSearch(q)     
       if( q === ""){
         var newArr: ResultFoods[] = searchArr
         if ( selectCategories !== 0 ) {
@@ -84,6 +84,7 @@ export default function Home()  {
     //select categories
     const catOnChange = (str:string) =>{      
       const numCat = parseInt(str)
+      setCurrentPage(1)
       setSelectCategories(numCat)
       var newArr: ResultFoods [] = searchArr
     if(numCat !== 0){
@@ -118,7 +119,7 @@ export default function Home()  {
            }               
         
             <Pagination              
-              defaultActivePage={currentPage}                  
+              ActivePage={currentPage}                  
               pointing
               secondary
               totalPages={pageCount}              

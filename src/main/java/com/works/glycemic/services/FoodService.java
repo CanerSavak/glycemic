@@ -67,8 +67,16 @@ public class FoodService {
 
     //food list
     public List<Food> foodList(){
-        return foodRepository.findAll();
+        return foodRepository.findByEnabledEqualsOrderByGidDesc(true);
     }
+
+
+    //admin wait food list// enabled=false foods
+    public List<Food> adminWaitFoodList() {
+        return foodRepository.findByEnabledEqualsOrderByGidDesc(false);
+    }
+
+
 
     // user food list
     public List<Food> userFoodList(){
