@@ -89,6 +89,7 @@ public class UserService extends SimpleUrlLogoutSuccessHandler implements UserDe
     // password encoder
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
+
     }
 
 
@@ -144,6 +145,7 @@ public class UserService extends SimpleUrlLogoutSuccessHandler implements UserDe
         if(oUser.isPresent()){
             User u = oUser.get();
             //u.setPassword(null);
+
             return u;
         }
         return null;

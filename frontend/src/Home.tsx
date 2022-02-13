@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { allFoodsList } from './Services';
 import { ToastContainer, toast } from 'react-toastify';
 import { IFoods, ResultFoods } from './models/IFood';
-import NavMenu from './components/NavMenu';
 import {  Dropdown, DropdownProps,  Header,  Input,  Pagination,  } from 'semantic-ui-react';
 import ProItem from './components/FoodItem';
 import { categories } from './Datas';
+import SiteMenu from './components/SiteMenu';
 
 
 export default function Home()  {
@@ -43,7 +43,6 @@ export default function Home()  {
      allFoodsList().then( res =>{
          const dt:IFoods = res.data;         
          setFoodsArr(dt.result!)
-         
          setSearchArr(dt.result!)         
          fncPagenation(dt.result!)
         toast.dismiss();
@@ -59,10 +58,14 @@ export default function Home()  {
     //search
     const search = (q:string) => {
       setWordSearch(q)
-      console.log(q) 
+      
       if( q === ""){
-        setFoodsArr(searchArr)       
-        fncPagenation(searchArr)
+        var newArr: ResultFoods[] = searchArr
+        if ( selectCategories !== 0 ) {
+          newArr = newArr.filter( item => item.cid === selectCategories )
+        }
+        setFoodsArr(newArr)       
+        fncPagenation(newArr)
       }
       else{ 
         q = q.toLowerCase()              
@@ -98,8 +101,8 @@ export default function Home()  {
   return (
   <> 
       <ToastContainer/>
-        <NavMenu/>  
-           <Header className="ui center aligned header" as='h4' inverted color='green' size='huge' >Food List </Header>                 
+        <SiteMenu/>  
+           <Header textAlign='center' as='h1' inverted color='green' size='huge' block>Food List </Header>                 
            <Input value={wordSearch}  onChange={(e) => search(e.target.value)} fluid style={{ marginBottom: 10, }}
             action={
             <Dropdown button basic floating options={categories} 

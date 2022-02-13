@@ -7,15 +7,14 @@ import 'react-toastify/dist/ReactToastify.css';
 
 //import pages
 import Home from './Home'
-import NavMenu from './components/NavMenu';
-import ProItem from './components/FoodItem';
+import FoodsAdd from './FoodsAdd';
 
 //Router
 const router =
 <Router>
   <Routes>
     <Route path='/' element={<Home/>}/>
-    <Route path='/home' element={<Home/>}/>  
+    <Route path='/foodsAdd' element={<FoodsAdd/>}/>  
   </Routes>
 </Router>
 
