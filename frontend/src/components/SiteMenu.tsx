@@ -1,11 +1,16 @@
 import React, { ReactEventHandler, useEffect, useState } from 'react';
 import {  NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Input, Modal, Image, Header, Button, Form, Menu, Icon, Label } from 'semantic-ui-react';
+import { Input, Modal, Image, Header, Button, Form, Menu, Icon, Label, ModalHeader, ModalActions, Table, SemanticCOLORS, ModalDescription } from 'semantic-ui-react';
 import { cities } from '../Datas';
 import { ToastContainer, toast } from 'react-toastify';
 import { logout, userAndAdminLogin, userRegister } from '../Services';
 import { IUser, UserResult } from '../models/IUser';
 import { control, encryptData } from '../Util';
+import { useDispatch, useSelector } from 'react-redux';
+import { StateType } from '../ReduxStore';
+import { ResultFoods } from '../models/IFood';
+import { IFoodAction, ReduxFoods } from '../reducers/FoodReducer';
+import { FoodType } from '../types/FoodType';
 
 
 
@@ -43,11 +48,18 @@ export default function NavMenu() {
          navigate("/foodsList")
        }
      }
-     if ( name === "Bekleyenler" ) {
+     if ( name === "Onay Sistemi" ) {
       if ( control() === null ) {
         setModalLoginStatus(true);
       }else {
         navigate("/waitFoodsList")
+      }
+    }
+     if ( name === "User Bilgi" ) {
+      if ( control() === null ) {
+        setModalLoginStatus(true);
+      }else {
+        navigate("/userInfo")
       }
     }
  
@@ -66,7 +78,10 @@ export default function NavMenu() {
       setActiveItem("Eklediklerim")
     }
     if ( loc.pathname === "/waitFoodsList" ) {
-      setActiveItem("Bekleyenler")
+      setActiveItem("Onay Sistemi")
+    }
+    if ( loc.pathname === "/userInfo" ) {
+      setActiveItem("User Bilgi")
     }
   }
 
@@ -198,8 +213,66 @@ export default function NavMenu() {
   })
 }
 
- 
- 
+// food basket
+const [modalBasket, setModalBasket] = useState(false)
+const foodReducer:ReduxFoods[] = useSelector((state: StateType) => state.FoodReducer);
+const basket = foodReducer.length
+
+//control add and delete food basket
+const [cntrl, setCntrl] = useState(false)
+useEffect(() => {
+
+},[cntrl])
+const fncError  = () => {
+  toast.warning("Minimum sepet adedine ulaştınız!")
+}
+const dispatch = useDispatch()
+//delete food function
+const fncDeleteFood = (id:number) => {
+    const food:ReduxFoods={
+      gid:id,
+      cid:0,
+      glycemicindex:0,
+      image:"",
+      name:"",
+      number:0,      
+    }
+    const item:IFoodAction = {
+      type: FoodType.PRODUCT_DELETE,
+      payload: food
+    }    
+    dispatch(item)
+    toast.info("Ürün sepetinizden kaldırıldı")
+}
+
+
+//color glysemıc
+const glycemicColor = (index:number) : SemanticCOLORS => {
+  var color:SemanticCOLORS ="red"
+  if (index > 0 && index < 56) {
+    color = "green"
+  }else if( index > 55 && index < 71 ){
+    color= "orange"
+  }else if (index > 70 ){
+    color="red"
+  }
+  return color;
+} 
+
+//summit index
+const [sumIndex, setsumIndex] = useState(0) 
+let sumIndex2 = 0
+useEffect(() => {
+    
+    foodReducer!.forEach(item =>  {
+    sumIndex2 = item.glycemicindex! * item.number!    
+    }) 
+    setsumIndex(sumIndex2)
+  console.log(sumIndex)
+}, [cntrl])
+
+
+
 
   return ( 
   <>
@@ -229,11 +302,18 @@ export default function NavMenu() {
             onClick={ (e, data) => handleItemClick(data.name!) }
             />
              { isAdmin === true && 
+              <>
               <Menu.Item
-              name='Bekleyenler'
-              active={activeItem === 'Bekleyenler'}
+              name='Onay Sistemi'
+              active={activeItem === 'Onay Sistemi'}
               onClick={ (e, data) => handleItemClick(data.name!) }
               />
+              <Menu.Item
+              name='User Bilgi'
+              active={activeItem === 'User Bilgi'}
+              onClick={ (e, data) => handleItemClick(data.name!) }
+              />
+              </>
             }
             <Menu.Menu position='right'>
 
@@ -255,13 +335,18 @@ export default function NavMenu() {
 
             { user && 
             <>
+             <Menu.Item                           
+              onClick={ (e, data) => setModalBasket(true)}>                                  
+                <Icon name='shopping basket' />Sepetim 
+                <Label color='red' floating>
+                  {basket} </Label>             
+             </Menu.Item>
             
              <Menu.Item>
               <Label color='red' >
                 <Icon name='user outline' /> { user.name } { user.surname }
               </Label>
-             </Menu.Item>
-
+             </Menu.Item>            
               <Menu.Item
                   icon='sign-out'
                   name='Çıkış Yap'
@@ -380,7 +465,86 @@ export default function NavMenu() {
         </Modal.Actions>
       </Modal>
 
-  
+      
+      <Modal
+          size="small"
+          style={{   height: 'auto',
+          top: 'auto',
+          left: 'auto',
+          bottom: 'auto',
+          right: 'auto',}}
+          open={modalBasket}
+          onClose={()=> setModalBasket(false)}>
+            
+            <ModalHeader>Sepetim</ModalHeader>
+            {basket === 0 &&            
+             <Modal.Content>Sepetinizde gıda bulunmamaktadır</Modal.Content> 
+            }
+            {basket !== 0 &&             
+            <Modal.Content>
+            {foodReducer.map((item, index) =>
+            <Table key={index} size='small'>
+              <Table.Header>
+                <Table.Row textAlign='center'>
+                  <Table.HeaderCell>{item.name}</Table.HeaderCell>                  
+                  <Table.HeaderCell>Glycemic İndex</Table.HeaderCell>
+                  <Table.HeaderCell>Adet</Table.HeaderCell>
+                  <Table.HeaderCell>Delete</Table.HeaderCell>                  
+                </Table.Row>
+              </Table.Header>
+            
+              <Table.Body>
+                 
+                <Table.Row key ={index}>
+                  <Table.Cell textAlign='center' verticalAlign='middle'>
+                    <Image src={item.image} size='mini' centered />
+                  </Table.Cell>                  
+                  <Table.Cell  textAlign='center' verticalAlign='middle'>
+                    <Label size='small' circular color={glycemicColor(item.glycemicindex!)}>
+                        {item.glycemicindex}
+                    </Label>   
+                  </Table.Cell>                    
+                  <Table.Cell textAlign='center' verticalAlign='middle'>
+                    <Button  size='mini' icon onClick={(e) => {item.number !== 1 ? (item.number = item.number!-1): fncError() ;cntrl ? setCntrl(false):setCntrl(true)}} ><Icon name='minus'/></Button>        
+                    <Label basic size='small' >{item.number}</Label>
+                    <Button  size='mini'icon onClick={(e) => {(item.number! = item.number!+1);cntrl ? setCntrl(false):setCntrl(true)}} ><Icon name='plus'/></Button>
+                  </Table.Cell> 
+                  <Table.Cell textAlign='center' verticalAlign='middle'>
+                    <Button color='red' size='small' icon onClick={(e) => fncDeleteFood(item.gid!)}> <Icon name='trash alternate outline'/>Sil</Button>
+                  </Table.Cell>
+                </Table.Row>
+                
+              </Table.Body> 
+              
+            </Table>
+            )}
+            </Modal.Content>            
+            }
+            
+           
+            
+            
+
+            <ModalActions>
+              <div className='col-md-4'></div>
+              <div className='col-md-4' >
+            <Label size='large' color='red' horizontal>
+            Toplam Glycemic İndex:  {sumIndex}
+            </Label></div>            
+              <Button icon='exit' color='green' onClick={() => setModalBasket(false) }>
+                    Çık
+              </Button>
+              
+            </ModalActions>
+            
+
+           
+      </Modal>
+     
+
+
+
+
   </>
   )}
   

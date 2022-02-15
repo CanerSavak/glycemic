@@ -57,12 +57,12 @@ export default function FoodsItem( props: itemType ) {
     }
 
   return (
-    <Grid.Column  mobile={8} tablet={8} computer={4} >
+    <Grid.Column  mobile={8} tablet={8} computer={8} >
     <Card fluid >
         <Card.Content>
         
         {  props.item.image !== "" && 
-            <Image
+            <Image 
                 floated='right'
                 size='tiny'
                 src={ props.item.image }
@@ -70,7 +70,7 @@ export default function FoodsItem( props: itemType ) {
         }
 
         {  props.item.image === "" && 
-            <Image
+            <Image 
                 floated='right'
                 size='tiny'
                 src='./foods.png'
@@ -79,33 +79,34 @@ export default function FoodsItem( props: itemType ) {
 
         { props.status && 
             <>
-                <Label as='a' color={ props.item.enabled === true ? 'blue'  : 'red' } ribbon>
+                <Label style={{ marginBottom: 10, }} as='a' color={ props.item.enabled === true ? 'blue'  : 'red' } ribbon>
                     { props.item.enabled === true ? "Yayında"  : "İnceleniyor"}
-                </Label>
-                <Card.Header> { props.item.name } </Card.Header>
+                </Label>                
             </>
         }
 
-        { !props.status && <Card.Header> { props.item.name } </Card.Header> }
-        <Label size='big' circular  style={{ marginTop: 10, }} color={ glycemicColor(props.item.glycemicindex!) }> { props.item.glycemicindex! } </Label>
-        <Card.Description>
-        <Card.Meta>{ props.item.createdBy === null ? 'user@mail.com' :  props.item.createdBy }</Card.Meta>
-        <Card.Meta>{ date.toLocaleDateString() }</Card.Meta>
-        <Card.Meta>{ categories[props.item.cid!].text }</Card.Meta>
+         <Card.Header textAlign='center' style={{ marginBottom: 1, }}>{ props.item.name } </Card.Header>
+        <Card.Meta textAlign='center'>
+        <Label  size='big' circular color={ glycemicColor(props.item.glycemicindex!) }> { props.item.glycemicindex! } </Label>
+        </Card.Meta> 
+        <Card.Meta style={{ marginTop: 10, }}>Ekleyen Kullanıcı: { props.item.createdBy === null ? 'user@mail.com' :  props.item.createdBy }</Card.Meta>
+        <Card.Meta>Eklendiği Tarih: { date.toLocaleDateString() }</Card.Meta>
+        <Card.Meta>Eklenen Kategori: { categories[props.item.cid!].text }</Card.Meta>
+        <Card.Meta style={{overflow:'hidden',}}>Kaynak: { props.item.source }</Card.Meta>
 
-        </Card.Description>
+       
         </Card.Content>
         <Card.Content extra>
         <div className='ui two buttons'>
         
             { props.isAdmin && 
                 <>
-                    <Button  basic color='green' onClick={()=> fncPush() } >
-                    <Icon name='info'/>Yayınla
+                    <Button basic color='green' onClick={()=> fncPush() } >
+                    <Icon name='arrow circle right'/>   Onayla
                     </Button>
                     
                     <Button basic color='red' onClick={()=> deleteItem() }>
-                    <Icon name='delete'/>Sil
+                    <Icon font-family name='delete'/>Sil
                     </Button>
                 </>
             }

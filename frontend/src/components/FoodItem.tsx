@@ -1,6 +1,12 @@
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 import {  Table, Image, Label, SemanticCOLORS, Button, Icon } from 'semantic-ui-react';
 import { ResultFoods } from '../models/IFood';
+import { IFoodAction, ReduxFoods } from '../reducers/FoodReducer';
+import { StateType } from '../ReduxStore';
+import { FoodType } from '../types/FoodType';
 
 
 interface foodModel {
@@ -28,9 +34,46 @@ export default function ProItem( props:foodModel) {
     const fncGotoDetail = (url:string) =>{       
         window.open("/details/"+url,"_blank")
     }
+    const dispatch = useDispatch()
+    //double food control
+    let doubleCountrol:boolean = false 
+
+    const foodReducer:ReduxFoods[] = useSelector((state: StateType) => state.FoodReducer);       
+
+    const foodAdd = (itemFood:ReduxFoods) => {  
+      foodReducer!.forEach(item =>  {
+          if(item.gid === itemFood.gid){            
+              doubleCountrol  = true              
+          }
+        })     
+      
+      if(doubleCountrol === true){
+          toast.info("Eklemeye çalıştığınız ürün zaten sepetinizde mevcut")    
+          
+      }else{
+          const food:ReduxFoods={       
+          gid:           itemFood.gid,
+          cid:           itemFood.cid,
+          name:          itemFood.name,
+          glycemicindex: itemFood.glycemicindex,
+          image:         itemFood.image,
+          number:        1        
+        }
+        const item:IFoodAction = {
+          type: FoodType.PRODUCT_ADD,
+          payload: food
+        }      
+        dispatch(item)
+        toast.success("Ürün başarıyla sepete eklendi")        
+        }        
+        
+    } 
+  
+    
+  
     
   return <> 
-   
+      <ToastContainer/>
       <Table padded textAlign='center' mobile={16} tablet={8} computer={4} sort="asc" >
         <Table.Header >
           <Table.Row textAlign='center'>
@@ -70,7 +113,7 @@ export default function ProItem( props:foodModel) {
                   <Button basic color='green' onClick={()=>  fncGotoDetail(props.item.url!) } >
                   <Icon name='info'/>Detay
                   </Button>
-                  <Button basic color='red'>
+                  <Button basic color='red' onClick={()=>  foodAdd(props.item!)}>
                   <Icon name='food'/>Ekle
                   </Button>
                 </div>

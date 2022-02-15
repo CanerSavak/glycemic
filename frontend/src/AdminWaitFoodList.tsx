@@ -54,12 +54,12 @@ export default function AdminWaitFoodList() {
     <>
         <ToastContainer />
         <SiteMenu />
-        <Header as='h3' block>
-        Kullanıcıdan Gelen Gıdalar
+        <Header textAlign='center' as='h1' inverted color='green' size='huge' block>
+        Onay bekleyen gıdalar
         </Header>
         <Transition visible={visible} animation='slide down' duration={750}>
-        <Segment vertical color='grey'  >
-            Kullanıcıdan gelen, Onay bekleyen gıdalar.
+        <Segment inverted   textAlign='center' color='red'  >
+            Kullanıcaların eklemiş olduğu gıdalara onay işlemlerini yapınız!
         </Segment>
         </Transition>
 

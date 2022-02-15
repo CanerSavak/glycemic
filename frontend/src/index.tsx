@@ -11,9 +11,16 @@ import FoodsAdd from './FoodsAdd';
 import Details from './Details';
 import AdminWaitFoodList from './AdminWaitFoodList';
 import FoodsList from './FoodsList';
+import UserInfo from './UserInfo';
+
+//redux
+import { store } from './ReduxStore';
+import { Provider } from 'react-redux';
+
 
 //Router
 const router =
+<Provider store={store}>
 <Router>
   <Routes>
     <Route path='/' element={<Home/>}/>
@@ -21,9 +28,10 @@ const router =
     <Route path='/details/:url' element={ <Details/> } />
     <Route path='/foodsList' element={ <FoodsList/> } />
     <Route path='/waitFoodsList' element={ <AdminWaitFoodList/> } />
+    <Route path='/userInfo' element={ <UserInfo/> } />
   </Routes>
 </Router>
-
+</Provider>
 ReactDOM.render(router ,
   document.getElementById('root')
 );

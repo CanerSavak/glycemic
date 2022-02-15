@@ -42,13 +42,13 @@ export default function FoodsList() {
     <>
         <ToastContainer />
         <SiteMenu />
-        <Header as='h3' block>
+        <Header textAlign='center' as='h1' inverted color='green' size='huge' block>
         Eklediğiniz Gıdalar
         </Header>
         <Transition visible={visible} animation='slide down' duration={750}>
-        <Segment vertical color='grey'  >
-            Eklediğiniz gıdaların listesini ve durumlarını burada bulabilirsiniz.
-        </Segment>
+        <Segment inverted   textAlign='center' color='red'  >
+            Eklediğiniz gıdaların listesini ve durumlarını burada bulabilirsiniz!
+        </Segment>        
         </Transition>
 
         <Grid >

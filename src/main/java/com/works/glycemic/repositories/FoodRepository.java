@@ -16,7 +16,7 @@ public interface FoodRepository extends JpaRepository<Food,Long> {
 
     Optional<Food> findByUrlEqualsIgnoreCaseAllIgnoreCase(String url);
 
-    List<Food> findByEnabledEqualsOrderByGidDesc(boolean enabled);
+    List<Food> findByEnabledEqualsOrderByGidAsc(boolean enabled);
 
 
 

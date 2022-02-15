@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify'
-import { Form, Header, Icon, InputOnChangeData, Segment, Image, Button } from 'semantic-ui-react'
+import { Form, Header, Icon, InputOnChangeData, Segment, Image, Button, Transition } from 'semantic-ui-react'
 import SiteMenu from './components/SiteMenu'
 import { categories } from './Datas';
 import { IFoods, ISingleFood } from './models/IFood';
@@ -89,15 +89,17 @@ export default function FoodsAdd() {
       })
     }    
   }
-
+  const [visible, setVisible] = useState(false)  
   useEffect(() => {
     if(authControl() ===null){
         navigate("/")
         localStorage.removeItem("user")
         localStorage.removeItem("auth")
     }  
-  }, [])
-  
+    setTimeout(() => {
+      setVisible(true)
+  }, 500)})
+
 
 
   return (
@@ -106,11 +108,12 @@ export default function FoodsAdd() {
     <SiteMenu  />
     <Header textAlign='center' as='h1' inverted color='green' size='huge' block>
         Gıda Ekle
-    </Header>    
+    </Header>
+    <Transition visible={visible} animation='slide down' duration={750}>    
     <Segment inverted   textAlign='center' color='red' >
-      Burada eklediğiniz gıdalar, admin onayına gidip denetimden geçtikten sonra yayına alınır.
+      Burada eklediğiniz gıdalar, admin onayına gidip denetimden geçtikten sonra yayına alınır!
     </Segment>
-
+    </Transition>
     <div className='row' > 
             <Form>
           <div className='col-md-4'> 

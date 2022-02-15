@@ -6,10 +6,10 @@ export interface IFoods {
 export interface ISingleFood {
     status?:  boolean;
     message?: string;
-    result?:  ResultFoods;
-}
+    result?:  ResultFoods;}
 
-export interface ResultFoods {
+
+export interface ResultFoods {     
     createdDate?:   number;
     modifiedDate?:  number;
     createdBy?:     string;

@@ -67,13 +67,13 @@ public class FoodService {
 
     //food list
     public List<Food> foodList(){
-        return foodRepository.findByEnabledEqualsOrderByGidDesc(true);
+        return foodRepository.findByEnabledEqualsOrderByGidAsc(true);
     }
 
 
     //admin wait food list// enabled=false foods
     public List<Food> adminWaitFoodList() {
-        return foodRepository.findByEnabledEqualsOrderByGidDesc(false);
+        return foodRepository.findByEnabledEqualsOrderByGidAsc(false);
     }
 
 
