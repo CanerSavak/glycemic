@@ -265,11 +265,11 @@ let sumIndex2 = 0
 useEffect(() => {
     
     foodReducer!.forEach(item =>  {
-    sumIndex2 = item.glycemicindex! * item.number!    
+    sumIndex2 += item.glycemicindex! * item.number!    
     }) 
     setsumIndex(sumIndex2)
   console.log(sumIndex)
-}, [cntrl])
+}, [cntrl,foodReducer])
 
 
 
@@ -510,7 +510,7 @@ useEffect(() => {
                     <Button  size='mini'icon onClick={(e) => {(item.number! = item.number!+1);cntrl ? setCntrl(false):setCntrl(true)}} ><Icon name='plus'/></Button>
                   </Table.Cell> 
                   <Table.Cell textAlign='center' verticalAlign='middle'>
-                    <Button color='red' size='small' icon onClick={(e) => fncDeleteFood(item.gid!)}> <Icon name='trash alternate outline'/>Sil</Button>
+                    <Button color='red' size='small' icon onClick={(e) =>{ fncDeleteFood(item.gid!);cntrl ? setCntrl(false):setCntrl(true)}}> <Icon name='trash alternate outline'/>Sil</Button>
                   </Table.Cell>
                 </Table.Row>
                 
