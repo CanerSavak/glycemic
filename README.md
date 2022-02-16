@@ -4,7 +4,7 @@
 <img src="https://github.com/canersavak/glycemic/blob/master/assets/images/home%20page.JPG"/>
 
 ## Login And Register
-<img src="https://github.com/canersavak/glycemic/blob/master/assets/images/log%20in.JPG" width="500"/><img src="https://github.com/canersavak/glycemic/blob/master/assets/images/sign%20up.JPG" width="500"/>
+<img src="https://github.com/canersavak/glycemic/blob/master/assets/images/log%20in.JPG" width="300"/><img src="https://github.com/canersavak/glycemic/blob/master/assets/images/sign%20up.JPG" width="300"/>
 
 ## User View
 <img src="https://github.com/canersavak/glycemic/blob/master/assets/images/user%20view.JPG"/>
