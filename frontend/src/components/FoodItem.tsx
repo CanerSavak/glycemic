@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import {  Table, Image, Label, SemanticCOLORS, Button, Icon } from 'semantic-ui-react';
+import { arrayBuffer } from 'stream/consumers';
 import { ResultFoods } from '../models/IFood';
 import { IFoodAction, ReduxFoods } from '../reducers/FoodReducer';
 import { StateType } from '../ReduxStore';
@@ -39,6 +40,8 @@ export default function ProItem( props:foodModel) {
     let doubleCountrol:boolean = false 
 
     const foodReducer:ReduxFoods[] = useSelector((state: StateType) => state.FoodReducer);       
+    let arr:ReduxFoods[] = []
+    const oldData = localStorage.getItem("basket")
 
     const foodAdd = (itemFood:ReduxFoods) => {  
       foodReducer!.forEach(item =>  {
@@ -64,10 +67,24 @@ export default function ProItem( props:foodModel) {
           payload: food
         }      
         dispatch(item)
-        toast.success("Ürün başarıyla sepete eklendi")        
+        toast.success("Ürün başarıyla sepete eklendi")  
+        if(oldData){
+          arr = JSON.parse(oldData)
+          arr.push(food)
+          const newString = JSON.stringify(arr) 
+          localStorage.setItem("basket", newString)
+        }else{
+          arr.push(food)
+          const newString = JSON.stringify(arr)
+          localStorage.setItem("basket",newString)
+        }
+
         }        
         
     } 
+   
+    
+        
   
     
   

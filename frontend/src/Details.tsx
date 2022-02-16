@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { Card, Grid, Item, Label } from 'semantic-ui-react'
+import { Button, Card, Divider, Grid, Header, Icon, Item, Label, Search, Segment } from 'semantic-ui-react'
 import SiteMenu from './components/SiteMenu'
 import { categories } from './Datas'
 import { IFoods, ISingleFood, ResultFoods } from './models/IFood'
@@ -23,43 +23,40 @@ export default function Details() {
             toast.error("" + err)
         })
     }, [])
-
+    const square = { width: 120, height: 120 }
     
     return (
-        <>
+        <>           
             <SiteMenu />
-            <Card.Group>
-                <Card fluid>
-                    <Card.Content>
-
+            <Segment raised>
+                <Grid columns={2} stackable textAlign='center'>   
+                    <Grid.Row verticalAlign='middle'>
+                        <Grid.Column>
                         {food?.image !== "" &&
                             <Item.Image
                                 floated='right'
-                                size='small'
+                                size='large'
                                 src={food?.image}
                             />
                         }
-
-                        {food?.image === "" &&
+                         {food?.image === "" &&
                             <Item.Image
                                 floated='right'
                                 size='tiny'
                                 src='./foods.png'
                             />
-                        }
-
-                        <Card.Header >{food?.name} </Card.Header>
-
-                        <Card.Meta style={{marginTop:'10px'}}>Glisemik İndeks: {food?.glycemicindex!}</Card.Meta>
-
-                        <Card.Meta style={{marginTop:'10px'}}>Oluşturulan Kişi: {food?.createdBy === null ? 'user@mail.com' : food?.createdBy}</Card.Meta>
-                        <Card.Meta style={{marginTop:'10px'}}>Oluşturulma Tarihi: {date.toLocaleDateString()} </Card.Meta>
-                    </Card.Content>
-
-                </Card>
-            </Card.Group>
-
-
+                        }   
+                        </Grid.Column>
+                        <Grid.Column>
+                        <Header textAlign='center' as='h1' inverted color='green' size='huge'>{food?.name}</Header>
+                        <Segment color='red' block secondary  >Glisemik İndeks: {food?.glycemicindex!}</Segment>
+                        <Segment color='red' block secondary>Oluşturulan Kişi: {food?.createdBy === null ? 'user@mail.com' : food?.createdBy}</Segment>
+                        <Segment color='red' block secondary>Oluşturulma Tarihi: {date.toLocaleDateString()}</Segment>
+                        
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+          </Segment>
 
         </>
     )

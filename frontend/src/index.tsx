@@ -11,7 +11,7 @@ import FoodsAdd from './FoodsAdd';
 import Details from './Details';
 import AdminWaitFoodList from './AdminWaitFoodList';
 import FoodsList from './FoodsList';
-import UserInfo from './UserInfo';
+
 
 //redux
 import { store } from './ReduxStore';
@@ -27,8 +27,7 @@ const router =
     <Route path='/foodsAdd' element={<FoodsAdd/>}/>  
     <Route path='/details/:url' element={ <Details/> } />
     <Route path='/foodsList' element={ <FoodsList/> } />
-    <Route path='/waitFoodsList' element={ <AdminWaitFoodList/> } />
-    <Route path='/userInfo' element={ <UserInfo/> } />
+    <Route path='/waitFoodsList' element={ <AdminWaitFoodList/> } />   
   </Routes>
 </Router>
 </Provider>

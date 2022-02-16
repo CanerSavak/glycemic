@@ -55,14 +55,6 @@ export default function NavMenu() {
         navigate("/waitFoodsList")
       }
     }
-     if ( name === "User Bilgi" ) {
-      if ( control() === null ) {
-        setModalLoginStatus(true);
-      }else {
-        navigate("/userInfo")
-      }
-    }
- 
    }
 
   // url control and menu active
@@ -80,9 +72,7 @@ export default function NavMenu() {
     if ( loc.pathname === "/waitFoodsList" ) {
       setActiveItem("Onay Sistemi")
     }
-    if ( loc.pathname === "/userInfo" ) {
-      setActiveItem("User Bilgi")
-    }
+    
   }
 
 
@@ -218,6 +208,9 @@ const [modalBasket, setModalBasket] = useState(false)
 const foodReducer:ReduxFoods[] = useSelector((state: StateType) => state.FoodReducer);
 const basket = foodReducer.length
 
+const oldData = localStorage.getItem("basket")
+let arr:ReduxFoods[] = []
+
 //control add and delete food basket
 const [cntrl, setCntrl] = useState(false)
 useEffect(() => {
@@ -227,6 +220,7 @@ const fncError  = () => {
   toast.warning("Minimum sepet adedine ulaştınız!")
 }
 const dispatch = useDispatch()
+
 //delete food function
 const fncDeleteFood = (id:number) => {
     const food:ReduxFoods={
@@ -242,7 +236,8 @@ const fncDeleteFood = (id:number) => {
       payload: food
     }    
     dispatch(item)
-    toast.info("Ürün sepetinizden kaldırıldı")
+    toast.info("Ürün sepetinizden kaldırıldı")   
+    
 }
 
 
@@ -259,32 +254,53 @@ const glycemicColor = (index:number) : SemanticCOLORS => {
   return color;
 } 
 
-//summit index
-const [sumIndex, setsumIndex] = useState(0) 
-let sumIndex2 = 0
 useEffect(() => {
-    
+  if(oldData){
+    arr = JSON.parse(oldData)
+    arr!.forEach(item =>{
+      foodReducer.push(item)
+    })
+  }  
+}, [loginStatus])
+
+let newArr:ReduxFoods[] = []
+useEffect(() => {
+  if(foodReducer.length === 0)
+  {
+    localStorage.removeItem("basket")
+  }else{
+  foodReducer!.forEach(item => {    
+    arr.push(item)
+    const newString = JSON.stringify(arr)
+    localStorage.setItem("basket",newString)
+  })  
+}
+}, [fncDeleteFood])
+
+
+
+const [sumIndex, setsumIndex] = useState(0)
+//summit index 
+let sumIndex2 = 0
+useEffect(() => {    
     foodReducer!.forEach(item =>  {
-    sumIndex2 += item.glycemicindex! * item.number!    
-    }) 
+    sumIndex2 += item.glycemicindex! * item.number!      
+    })    
     setsumIndex(sumIndex2)
-  console.log(sumIndex)
 }, [cntrl,foodReducer])
-
-
-
 
   return ( 
   <>
   <ToastContainer/>
   <Menu secondary
         stackable
-        color='red'
+        color='yellow'
         size='large' 
+        style={{}}
                  
                   >
           <Menu.Item>
-            <img alt="logo" src='/logo.png' />
+            <img alt="logo" src='/glycemic.jpg' />
           </Menu.Item>
             <Menu.Item
             name='Anasayfa'
@@ -307,18 +323,19 @@ useEffect(() => {
               name='Onay Sistemi'
               active={activeItem === 'Onay Sistemi'}
               onClick={ (e, data) => handleItemClick(data.name!) }
-              />
-              <Menu.Item
-              name='User Bilgi'
-              active={activeItem === 'User Bilgi'}
-              onClick={ (e, data) => handleItemClick(data.name!) }
-              />
+              />              
               </>
             }
             <Menu.Menu position='right'>
 
             { !user && 
             <>
+              <Menu.Item                           
+                onClick={ (e, data) => setModalBasket(true)}>                                  
+                  <Icon name='shopping basket' />Sepetim 
+                  <Label color='red' floating>
+                    {basket} </Label>             
+              </Menu.Item>
               <Menu.Item
                   name='Giriş Yap'
                   icon='sign-in   '

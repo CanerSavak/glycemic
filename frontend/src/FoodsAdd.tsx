@@ -137,7 +137,7 @@ export default function FoodsAdd() {
                 <Form.Select  label='Kategori' value={cid} fluid placeholder='Kategori' options={categories} search onChange={(e,d) => setCid( ""+d.value )} />
                 <Form.Input fluid label='Kaynak'  onChange={(e) => setSource(e.target.value)}
                 placeholder='Kaynak' />
-                <Button type='submit' onClick={(e) => fncFoodAdd()}>Gönder</Button>
+                <Button type='submit' onClick={(e) => fncFoodAdd()}>Ekle</Button>
             </div>
             </Form>
     </div> 
