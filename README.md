@@ -11,15 +11,10 @@
 |       Spring-JPA      |        
 |       H2-Database     |
 
-           
-
-
-
-
-
-
+  
 
 ## About App
+-
 
 ## Homepage
 <img src="https://github.com/canersavak/glycemic/blob/master/assets/images/home%20page.JPG"/>
