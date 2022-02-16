@@ -2,22 +2,22 @@
 
 ## Used Technologies
 
-|       Back-End        |       
-|-----------------------|       
-|        Java           |       
-|     Spring-Boot       |      
-|   Spring Security     |       
-|      JPA-Auditing     |             
-|    Spring-RestApi     |        
-|      Spring-JPA       |
-|      H2-Database      |
+|       Back-End        |       Front-End       |    
+|-----------------------|-----------------------|   
+|         Spring-Boot   |       React.js        |  
+|    Spring Security    |      TypeScript       |
+|    Spring-RestApi     |      Semantic-ui      |    
+|      JPA-Auditing     |      React-Redux      |          
+|       Spring-JPA      |        
+|       H2-Database     |
+
            
-|       Front-End       |
-|-----------------------|
-|       React.js        |
-|      TypeScript       |
-|      Semantic-ui      |
-|      React-Redux      |
+
+
+
+
+
+
 
 ## About App
 
