@@ -1,5 +1,26 @@
 # Glycemic
 
+## Used Technologies
+
+|       Back-End        |       
+|-----------------------|       
+|        Java           |       
+|     Spring-Boot       |      
+|   Spring Security     |       
+|      JPA-Auditing     |             
+|    Spring-RestApi     |        
+|      Spring-JPA       |
+|      H2-Database      |
+           
+|       Front-End       |
+|-----------------------|
+|       React.js        |
+|      TypeScript       |
+|      Semantic-ui      |
+|      React-Redux      |
+
+## About App
+
 ## Homepage
 <img src="https://github.com/canersavak/glycemic/blob/master/assets/images/home%20page.JPG"/>
 
@@ -30,5 +51,5 @@
 ## My Basket And Minumum Number
 <img src="https://github.com/canersavak/glycemic/blob/master/assets/images/mınımum%20basket%20food.JPG" />
 
-## Local Storage Item
+## Local Storage Data Security And Basket 
 <img src="https://github.com/canersavak/glycemic/blob/master/assets/images/local%20storage.JPG" />
